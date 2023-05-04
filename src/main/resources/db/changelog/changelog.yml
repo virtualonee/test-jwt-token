@@ -1,0 +1,78 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: DEV-1
+      author: virtu
+      changes:
+        - createTable:
+            tableName: person
+            remarks: Пользователь
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: person_pk
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(100)
+                  remarks: Имя
+              - column:
+                  name: age
+                  type: smallint
+                  remarks: Возраст
+              - column:
+                  name: password
+                  type: varchar(200)
+              - column:
+                  name: role
+                  type: varchar(50)
+        - createTable:
+            tableName: house
+            remarks: Дом
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: house_pk
+                    nullable: false
+              - column:
+                  name: address
+                  type: varchar(100)
+                  remarks: Адрес
+              - column:
+                  name: owner_id
+                  type: BIGINT
+        - createTable:
+            tableName: person_house
+            columns:
+              - column:
+                  name: house_id
+                  type: BIGINT
+              - column:
+                  name: person_id
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseTableName: person_house
+            baseColumnNames: house_id
+            referencedTableName: house
+            referencedColumnNames: id
+            constraintName: house_fk
+        - addForeignKeyConstraint:
+            baseTableName: person_house
+            baseColumnNames: person_id
+            referencedTableName: person
+            referencedColumnNames: id
+            constraintName: person_fk
+        - addForeignKeyConstraint:
+            baseTableName: house
+            baseColumnNames: owner_id
+            referencedTableName: person
+            referencedColumnNames: id
+            constraintName: house_person_fk
