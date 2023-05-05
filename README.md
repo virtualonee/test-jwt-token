@@ -199,7 +199,7 @@ POST http://localhost:8080/houses/{id}/add_occupant
 #### Response 
 "OK"
 
-### DELETE ALL OCCUPANT FROM HOSE
+### DELETE ALL OCCUPANT FROM HOUSE
 #### Request 
 DELETE http://localhost:8080/houses/{id}/delete_occupants
 
