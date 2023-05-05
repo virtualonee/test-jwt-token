@@ -43,6 +43,9 @@ public class PeopleService {
 
         updatedPerson.setId(id);
         updatedPerson.setHouses(person.getHouses());
+        updatedPerson.setPassword(person.getPassword());
+        updatedPerson.setRole(person.getRole());
+
         peopleRepository.save(updatedPerson);
     }
 

@@ -41,7 +41,10 @@ public class Person {
     @Column(name = "role")
     private String role;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "owner")
+    private List<House> ownedHouses;
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "person_house",
             joinColumns = @JoinColumn(name = "person_id"),

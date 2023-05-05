@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/house")
+@RequestMapping("/houses")
 public class HousesController {
     private final AdminService adminService;
     private final HousesService housesService;
@@ -50,7 +50,7 @@ public class HousesController {
         house.setOwner(person);
         housesService.save(house);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/update")
@@ -59,13 +59,19 @@ public class HousesController {
         House house = convertToHouse(houseDTO);
         housesService.update(id, house);
 
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}/delete")
     public ResponseEntity <HttpStatus> deleteHouse(@PathVariable Long id) {
-        housesService.delete(id);
-        return ResponseEntity.ok(HttpStatus.OK);
+        Person person = getPersonFromSecurityContext();
+
+        if(housesService.delete(id, person)){
+            return ResponseEntity.ok(HttpStatus.OK);
+        }
+        else {
+            return  ResponseEntity.badRequest().body(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/{id}/add_occupant")
@@ -82,12 +88,16 @@ public class HousesController {
     }
 
     @DeleteMapping("/{id}/delete_occupants")
-    public ResponseEntity <HttpStatus> deleteHousesOccupants(@PathVariable Long id) {
-        housesService.deleteAllOccupants(id);
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
+    public ResponseEntity <HttpStatus> deleteAllHousesOccupants(@PathVariable Long id) {
+        Person person = getPersonFromSecurityContext();
 
-    // TODO add more controllers for occupants
+        if(housesService.deleteAllOccupants(id, person)){
+            return ResponseEntity.ok(HttpStatus.OK);
+        }
+        else {
+            return  ResponseEntity.badRequest().body(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     public HouseDTO convertToHouseDTO(House house){
         return modelMapper.map(house, HouseDTO.class);

@@ -29,7 +29,7 @@ public class House {
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Person owner;
 
-    @ManyToMany(mappedBy = "houses")
+    @ManyToMany(mappedBy = "houses", cascade = CascadeType.ALL)
     private List<Person> personList; // TODO change to Set
 
     @Override

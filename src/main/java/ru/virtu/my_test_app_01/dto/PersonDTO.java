@@ -22,7 +22,4 @@ public class PersonDTO {
     @Min(value = 0, message = "Age should be more then 0")
     @Max(value = 100, message = "Age should be less then 100")
     private Short age;
-
-    @Size(min = 5, max = 100, message = "Password should be from 5 to 200 symbols")
-    private String password;
 }

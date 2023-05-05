@@ -47,7 +47,7 @@ public class PeopleController {
         Person person = convertToPerson(personDTO);
         peopleService.update(id, person);
 
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}/delete")

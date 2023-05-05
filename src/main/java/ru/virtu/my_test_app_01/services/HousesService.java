@@ -10,10 +10,7 @@ import ru.virtu.my_test_app_01.repositories.HousesRepository;
 import ru.virtu.my_test_app_01.models.House;
 import ru.virtu.my_test_app_01.repositories.PeopleRepository;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
@@ -48,16 +45,25 @@ public class HousesService {
     @Transactional
     public void update(Long id, House updatedHouse) {
         House house = housesRepository.findById(id).orElse(null);
+
         updatedHouse.setOwner(house.getOwner());
         updatedHouse.setPersonList(house.getPersonList());
-
         updatedHouse.setId(id);
+
         housesRepository.save(updatedHouse);
     }
 
     @Transactional
-    public void delete(Long id) {
+    public Boolean delete(Long id, Person user) {
+        House house = housesRepository.findById(id).orElse(null);
+        if (house == null){
+            return false;
+        }
+        else if (!house.getOwner().equals(user)){
+            return false;
+        }
         housesRepository.deleteById(id);
+        return true;
     }
 
     @Transactional
@@ -78,18 +84,34 @@ public class HousesService {
         if (people.contains(occupant)){
             return false;
         }
-        occupant.setHouses(Collections.singletonList(house));
+        List<House> houses = occupant.getHouses();
+        houses.add(house);
+
+        occupant.setHouses(houses);
         peopleRepository.save(occupant);
 
         return true;
     }
 
     @Transactional
-    public void deleteAllOccupants(Long id){
+    public Boolean deleteAllOccupants(Long id, Person user){
         House house = housesRepository.findById(id).orElse(null);
         if (house == null){
-            return;
+            return false;
         }
-        house.setPersonList(null);
+        else if (!house.getOwner().equals(user)){
+            return false;
+        }
+        List<Person> people = house.getPersonList();
+        if (people.isEmpty()) return true;
+        for (Person person:
+             people) {
+            List<House> houseList = person.getHouses();
+            houseList.remove(house);
+            person.setHouses(houseList);
+            peopleRepository.save(person);
+        }
+
+        return true;
     }
 }

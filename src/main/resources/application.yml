@@ -14,4 +14,7 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/changelog.yml
 
+server:
+  port : 8080
+
 jwt_secret: my_secret_dasdasa_01
